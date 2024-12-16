@@ -6,16 +6,36 @@
 //
 
 import SwiftUI
+import PhotosUI
 
 struct ContentView: View {
+    @State private var image: Image?
+    @State private var showingImagePicker = false
+    @State private var inputImage: UIImage?
+
     var body: some View {
         VStack {
-            Image(systemName: "globe")
-                .imageScale(.large)
-                .foregroundStyle(.tint)
-            Text("Hello, world!")
+            ZStack {
+                Text("Select an image")
+
+                image?
+                    .resizable()
+                    .scaledToFit()
+            }
         }
         .padding()
+        .onTapGesture {
+            showingImagePicker = true
+        }
+        .onChange(of: inputImage) { _ in loadImage() }
+        .sheet(isPresented: $showingImagePicker) {
+            ImagePicker(image: $inputImage)
+        }
+    }
+
+    func loadImage() {
+        guard let inputImage else { return }
+        image = Image(uiImage: inputImage)
     }
 }
 
