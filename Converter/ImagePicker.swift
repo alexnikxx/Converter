@@ -2,7 +2,7 @@
 //  ImagePicker.swift
 //  Converter
 //
-//  Created by Aleksandra Nikiforova on 16/12/24.
+//  Created by Aleksandra Nikiforova on 15/12/24.
 //
 
 import PhotosUI
