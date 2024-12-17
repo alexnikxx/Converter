@@ -9,6 +9,7 @@ import SwiftUI
 
 struct ListView: View {
     @StateObject private var viewModel = ListViewModel()
+    @State private var showingInfo = false
     private let columns: [GridItem] = [
         GridItem(.flexible()),
         GridItem(.flexible()),
@@ -56,6 +57,16 @@ struct ListView: View {
                 }
             }
             .navigationTitle("Ваши PDF")
+            .toolbar {
+                Button {
+                    showingInfo = true
+                } label: {
+                    Image(systemName: "questionmark")
+                }
+            }
+            .sheet(isPresented: $showingInfo) {
+                WelcomeView()
+            }
         }
     }
 }
