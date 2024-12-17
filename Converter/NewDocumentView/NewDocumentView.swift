@@ -11,6 +11,7 @@ import PhotosUI
 struct NewDocumentView: View {
     @StateObject private var viewModel = NewDocumentViewModel()
     @State var showingAlert = false
+    @State var showingTitleTextField = false
 
     var body: some View {
         VStack {
@@ -32,7 +33,10 @@ struct NewDocumentView: View {
         .sheet(isPresented: $viewModel.showingImagePicker) {
             ImagePicker(images: $viewModel.inputImages)
         }
-        .alert("Important message", isPresented: $showingAlert) {
+        .alert(isPresented: $showingAlert) {
+            Alert(title: Text("Сохранение невозможно"), message: Text("Изображения не выбраны"), dismissButton: .cancel())
+        }
+        .alert("Сохранение PDF", isPresented: $showingTitleTextField) {
             TextField("Введите название", text: $viewModel.title)
             Button("Отменить", role: .cancel) { }
             Button("Сохранить") {
@@ -47,7 +51,11 @@ struct NewDocumentView: View {
             }
 
             Button("Сохранить") {
-                showingAlert = true
+                if viewModel.images.isEmpty {
+                    showingAlert = true
+                } else {
+                    showingTitleTextField = true
+                }
             }
         }
     }

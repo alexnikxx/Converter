@@ -12,6 +12,7 @@ struct PDFFile: Identifiable {
     let title: String
     let creationDate: Date
     let fileFormat: String
+    let fileURL: URL
 
     func convertDateToString() -> String {
         let formatter = DateFormatter()

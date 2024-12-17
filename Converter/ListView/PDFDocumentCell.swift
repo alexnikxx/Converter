@@ -33,5 +33,5 @@ struct PDFDocumentCell: View {
 }
 
 #Preview {
-    PDFDocumentCell(document: PDFFile(title: "Паспорт", creationDate: Date(), fileFormat: ".pdf"))
+    PDFDocumentCell(document: PDFFile(title: "Паспорт", creationDate: Date(), fileFormat: ".pdf", fileURL: URL(fileURLWithPath: "")))
 }

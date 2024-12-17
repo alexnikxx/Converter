@@ -57,16 +57,27 @@ class CoreDataManager: ObservableObject {
         newDoc.title = pdf.title
         newDoc.fileFormat = pdf.fileFormat
         newDoc.creationDate = pdf.creationDate
-//        newDoc.fileURL = pdf.fileURL.absoluteString
+        newDoc.fileURL = pdf.fileURL.absoluteString
 
         saveContext()
     }
 
     private func transformToPDF(_ entity: PDFDocumentEntity) -> PDFFile {
+        guard let filePath = entity.fileURL, let url = URL(string: filePath) else {
+            print("Error getting file URL")
+            return PDFFile(
+                title: entity.title ?? "Unknown",
+                creationDate: entity.creationDate ?? Date(),
+                fileFormat: entity.fileFormat ?? ".pdf",
+                fileURL: URL(fileURLWithPath: "")
+            )
+        }
+
         return PDFFile(
             title: entity.title ?? "Unknown",
             creationDate: entity.creationDate ?? Date(),
-            fileFormat: entity.fileFormat ?? ".pdf"
+            fileFormat: entity.fileFormat ?? ".pdf",
+            fileURL: url
         )
     }
 }

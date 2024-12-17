@@ -41,7 +41,8 @@ final class PDFManager {
                 let file = PDFFile(
                     title: title,
                     creationDate: Date(),
-                    fileFormat: ".pdf"
+                    fileFormat: ".pdf",
+                    fileURL: pdfURL
                 )
 
                 completion(file)

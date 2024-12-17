@@ -28,7 +28,7 @@ struct ListView: View {
 
                     ForEach(viewModel.coreDataManager.savedDocs, id: \.id) { document in
                         NavigationLink {
-
+                            ReadDocumentView(url: document.fileURL)
                         } label: {
                             PDFDocumentCell(document: document)
                         }
