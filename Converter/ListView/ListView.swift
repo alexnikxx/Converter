@@ -56,6 +56,7 @@ struct ListView: View {
                     }
                 }
             }
+            .navigationTitle("Ваши PDF")
         }
     }
 }

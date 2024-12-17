@@ -45,7 +45,7 @@ class CoreDataManager: ObservableObject {
         let fetchRequest = NSFetchRequest<PDFDocumentEntity>(entityName: "PDFDocumentEntity")
         do {
             let documents = try context.fetch(fetchRequest)
-            savedDocs = documents.map { transformToPDF($0) }
+            savedDocs = documents.compactMap { transformToPDF($0) }
             savedDocs.sort(by: { $0.creationDate > $1.creationDate} )
         } catch let error {
             print("Error fetching documents: \(error.localizedDescription)")
@@ -58,7 +58,6 @@ class CoreDataManager: ObservableObject {
         newDoc.title = pdf.title
         newDoc.fileFormat = pdf.fileFormat
         newDoc.creationDate = pdf.creationDate
-        newDoc.fileURL = pdf.fileURL.absoluteString
 
         saveContext()
     }
@@ -69,10 +68,7 @@ class CoreDataManager: ObservableObject {
         do {
             let documents = try context.fetch(fetchRequest)
             if let document = documents.first(where: { $0.id == doc.id}) {
-                if let filePath = document.fileURL, let fileURL = URL(string: filePath) {
-                    deleteFile(at: fileURL)
-                }
-
+                deleteFile(with: doc.id)
                 context.delete(document)
                 saveContext()
             } else {
@@ -85,7 +81,14 @@ class CoreDataManager: ObservableObject {
         saveContext()
     }
 
-    private func deleteFile(at url: URL) {
+    private func deleteFile(with id: UUID) {
+        guard let directory = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first else {
+            print("Error getting directory")
+            return
+        }
+
+        let url = directory.appendingPathComponent("\(id).pdf")
+
         let fileManager = FileManager.default
         if fileManager.fileExists(atPath: url.path) {
             do {
@@ -99,20 +102,16 @@ class CoreDataManager: ObservableObject {
         }
     }
 
-    private func transformToPDF(_ entity: PDFDocumentEntity) -> PDFFile {
-        guard let filePath = entity.fileURL, let url = URL(string: filePath) else {
-            print("Error getting file URL")
-            return PDFFile(
-                id: entity.id ?? UUID(),
-                title: entity.title ?? "Unknown",
-                creationDate: entity.creationDate ?? Date(),
-                fileFormat: entity.fileFormat ?? ".pdf",
-                fileURL: URL(fileURLWithPath: "")
-            )
+    private func transformToPDF(_ entity: PDFDocumentEntity) -> PDFFile? {
+        guard let directory = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first,
+              let id = entity.id else {
+            print("Error getting directory")
+            return nil
         }
 
+        let url = directory.appendingPathComponent("\(id).pdf")
         return PDFFile(
-            id: entity.id ?? UUID(),
+            id: id,
             title: entity.title ?? "Unknown",
             creationDate: entity.creationDate ?? Date(),
             fileFormat: entity.fileFormat ?? ".pdf",

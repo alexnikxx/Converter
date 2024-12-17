@@ -29,14 +29,15 @@ final class PDFManager {
         }
 
         if let documentsDirectory = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first {
-            let pdfURL = documentsDirectory.appendingPathComponent("\(title).pdf")
+            let id = UUID()
+            let pdfURL = documentsDirectory.appendingPathComponent("\(id).pdf")
 
             do {
                 try data.write(to: pdfURL)
                 print("PDF saved: \(pdfURL)")
 
                 let file = PDFFile(
-                    id: UUID(),
+                    id: id,
                     title: title,
                     creationDate: Date(),
                     fileFormat: ".pdf",

@@ -15,7 +15,7 @@ struct NewDocumentCell: View {
                     .resizable()
                     .scaledToFit()
                     .foregroundStyle(.black.opacity(0.3))
-                    .frame(width: 100, height: 100)
+                    .frame(width: 80, height: 80)
 
                 Image(systemName: "plus")
                     .resizable()
@@ -29,7 +29,7 @@ struct NewDocumentCell: View {
                 .font(.caption.bold())
                 .multilineTextAlignment(.center)
         }
-        .frame(width: 100, height: 150, alignment: .top)
+        .frame(width: 100, height: 150)
     }
 }
 

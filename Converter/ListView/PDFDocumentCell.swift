@@ -15,7 +15,7 @@ struct PDFDocumentCell: View {
             Image(systemName: "document.fill")
                 .resizable()
                 .scaledToFit()
-                .frame(width: 100, height: 100)
+                .frame(width: 80, height: 80)
 
             Text(document.title)
                 .font(.caption.bold())
@@ -28,7 +28,7 @@ struct PDFDocumentCell: View {
                 .font(.caption)
                 .foregroundStyle(.secondary)
         }
-        .frame(width: 200, height: 150)
+        .frame(width: 150, height: 150)
     }
 }
 
