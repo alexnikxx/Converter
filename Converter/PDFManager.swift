@@ -50,6 +50,15 @@ final class PDFManager {
         }
     }
 
+    static func sharePDF(fileURL: URL) {
+        let activityViewController = UIActivityViewController(activityItems: [fileURL], applicationActivities: nil)
+        if let scene = UIApplication.shared.connectedScenes.first as? UIWindowScene {
+            if let window = scene.windows.first {
+                window.rootViewController?.present(activityViewController, animated: true, completion: nil)
+            }
+        }
+    }
+
     private func addPage(for image: UIImage, context: UIGraphicsPDFRendererContext) {
         context.beginPage()
         let imageSize = image.size

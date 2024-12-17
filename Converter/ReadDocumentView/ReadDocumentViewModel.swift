@@ -8,5 +8,7 @@
 import Foundation
 
 final class ReadDocumentViewModel: ObservableObject {
-
+    func sharePDF(url: URL) {
+        PDFManager.sharePDF(fileURL: url)
+    }
 }

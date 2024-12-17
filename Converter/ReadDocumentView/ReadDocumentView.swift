@@ -8,13 +8,19 @@
 import SwiftUI
 
 struct ReadDocumentView: View {
+    @StateObject private var viewModel = ReadDocumentViewModel()
     let url: URL
 
     var body: some View {
-        PDFKitView(url: url)
+        VStack {
+            PDFKitView(url: url)
+        }
+        .toolbar {
+            Button {
+                viewModel.sharePDF(url: url)
+            } label: {
+                Image(systemName: "square.and.arrow.up")
+            }
+        }
     }
-}
-
-#Preview {
-    ReadDocumentView(url: Bundle.main.url(forResource: "sample", withExtension: "pdf")!)
 }

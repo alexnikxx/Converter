@@ -35,7 +35,7 @@ struct ListView: View {
                         .buttonStyle(PlainButtonStyle())
                         .contextMenu {
                             Button {
-
+                                PDFManager.sharePDF(fileURL: document.fileURL)
                             } label: {
                                 Label("Поделиться", systemImage: "square.and.arrow.up")
                             }
