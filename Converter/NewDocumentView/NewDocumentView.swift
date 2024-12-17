@@ -9,33 +9,34 @@ import SwiftUI
 import PhotosUI
 
 struct NewDocumentView: View {
-    @State private var image: Image?
-    @State private var showingImagePicker = false
-    @State private var inputImage: UIImage?
+    @StateObject private var viewModel = NewDocumentViewModel()
 
     var body: some View {
         VStack {
-            ZStack {
-                Text("Select an image")
+            ScrollView(.vertical) {
+                ForEach(viewModel.images, id: \.self) { image in
+                    Image(uiImage: image)
+                        .resizable()
+                        .scaledToFit()
+                }
+            }
 
-                image?
-                    .resizable()
-                    .scaledToFit()
+            Button {
+                viewModel.showingImagePicker = true
+            } label: {
+                Text("Выбрать изображения")
+            }
+            .buttonStyle(.borderedProminent)
+        }
+        .onChange(of: viewModel.inputImages) { _ in viewModel.loadImages() }
+        .sheet(isPresented: $viewModel.showingImagePicker) {
+            ImagePicker(images: $viewModel.inputImages)
+        }
+        .toolbar {
+            Button("Сохранить") {
+                
             }
         }
-        .padding()
-        .onTapGesture {
-            showingImagePicker = true
-        }
-        .onChange(of: inputImage) { _ in loadImage() }
-        .sheet(isPresented: $showingImagePicker) {
-            ImagePicker(image: $inputImage)
-        }
-    }
-
-    func loadImage() {
-        guard let inputImage else { return }
-        image = Image(uiImage: inputImage)
     }
 }
 
