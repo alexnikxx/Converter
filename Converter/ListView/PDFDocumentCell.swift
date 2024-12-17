@@ -12,7 +12,7 @@ struct PDFDocumentCell: View {
 
     var body: some View {
         VStack {
-            Image(systemName: "document.fill")
+            Image(uiImage: document.thumbnail)
                 .resizable()
                 .scaledToFit()
                 .frame(width: 80, height: 80)
@@ -28,10 +28,6 @@ struct PDFDocumentCell: View {
                 .font(.caption)
                 .foregroundStyle(.secondary)
         }
-        .frame(width: 150, height: 150)
+        .frame(width: 150, height: 150, alignment: .center)
     }
-}
-
-#Preview {
-    PDFDocumentCell(document: PDFFile(id: UUID(), title: "Паспорт", creationDate: Date(), fileFormat: ".pdf", fileURL: URL(fileURLWithPath: "")))
 }

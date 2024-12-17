@@ -58,6 +58,7 @@ class CoreDataManager: ObservableObject {
         newDoc.title = pdf.title
         newDoc.fileFormat = pdf.fileFormat
         newDoc.creationDate = pdf.creationDate
+        newDoc.thumbnail = pdf.convertThumbnailToData()
 
         saveContext()
     }
@@ -109,13 +110,20 @@ class CoreDataManager: ObservableObject {
             return nil
         }
 
+        guard let thumbnailData = entity.thumbnail,
+              let thumbnail = UIImage(data: thumbnailData) else {
+            print("Error getting thumbnail")
+            return nil
+        }
+
         let url = directory.appendingPathComponent("\(id).pdf")
         return PDFFile(
             id: id,
             title: entity.title ?? "Unknown",
             creationDate: entity.creationDate ?? Date(),
             fileFormat: entity.fileFormat ?? ".pdf",
-            fileURL: url
+            fileURL: url,
+            thumbnail: thumbnail
         )
     }
 }

@@ -9,8 +9,6 @@ import SwiftUI
 import PDFKit
 
 final class PDFManager {
-    let context = CoreDataManager.shared.context
-
     let format = UIGraphicsPDFRendererFormat()
     let pageRect = CGRect(x: 0, y: 0, width: 595, height: 842)
 
@@ -41,7 +39,8 @@ final class PDFManager {
                     title: title,
                     creationDate: Date(),
                     fileFormat: ".pdf",
-                    fileURL: pdfURL
+                    fileURL: pdfURL,
+                    thumbnail: createThumbnail(from: pdfURL)
                 )
 
                 completion(file)
@@ -67,5 +66,40 @@ final class PDFManager {
         let centeredRect = CGRect(x: x, y: y, width: scaledWidth, height: scaledHeight)
 
         image.draw(in: centeredRect)
+    }
+
+    private func createThumbnail(from url: URL) -> UIImage {
+        guard let pdfDocument = PDFDocument(url: url),
+              let page = pdfDocument.page(at: 0) else {
+            print("Failed to create thumbnail for PDF at \(url)")
+            return UIImage(systemName: "doсument.fill") ?? UIImage()
+        }
+
+        let pageRect = page.bounds(for: .mediaBox)
+        let scale = 80 / pageRect.width
+        let scaledSize = CGSize(width: pageRect.width * scale, height: pageRect.height * scale)
+
+        UIGraphicsBeginImageContextWithOptions(scaledSize, true, 0)
+        let context = UIGraphicsGetCurrentContext()!
+
+        context.setFillColor(UIColor.white.cgColor)
+        context.fill(CGRect(origin: .zero, size: scaledSize))
+
+        context.setStrokeColor(UIColor.gray.cgColor)
+        context.setLineWidth(2.0)
+        context.stroke(CGRect(origin: .zero, size: scaledSize))
+
+        context.saveGState()
+        context.translateBy(x: 0, y: scaledSize.height)
+        context.scaleBy(x: 1, y: -1)
+        context.scaleBy(x: scale, y: scale)
+
+        page.draw(with: .mediaBox, to: context)
+        context.restoreGState()
+
+        let thumbnail = UIGraphicsGetImageFromCurrentImageContext()
+        UIGraphicsEndImageContext()
+
+        return thumbnail ?? UIImage(systemName: "doсument.fill") ?? UIImage()
     }
 }

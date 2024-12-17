@@ -10,8 +10,8 @@ import PhotosUI
 
 struct NewDocumentView: View {
     @StateObject private var viewModel = NewDocumentViewModel()
-    @State var showingAlert = false
-    @State var showingTitleTextField = false
+    @State private var showingAlert = false
+    @State private var showingTitleTextField = false
 
     var body: some View {
         VStack {

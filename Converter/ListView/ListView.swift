@@ -9,7 +9,6 @@ import SwiftUI
 
 struct ListView: View {
     @StateObject private var viewModel = ListViewModel()
-    @State private var showingAlert = false
     private let columns: [GridItem] = [
         GridItem(.flexible()),
         GridItem(.flexible()),
