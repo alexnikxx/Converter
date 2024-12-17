@@ -9,6 +9,7 @@ import SwiftUI
 
 struct ListView: View {
     @StateObject private var viewModel = ListViewModel()
+    @State private var showingAlert = false
     private let columns: [GridItem] = [
         GridItem(.flexible()),
         GridItem(.flexible()),
@@ -33,6 +34,25 @@ struct ListView: View {
                             PDFDocumentCell(document: document)
                         }
                         .buttonStyle(PlainButtonStyle())
+                        .contextMenu {
+                            Button {
+
+                            } label: {
+                                Label("Поделиться", systemImage: "square.and.arrow.up")
+                            }
+
+                            Button {
+                                viewModel.deleteDoc(document: document)
+                            } label: {
+                                Label("Удалить", systemImage: "trash")
+                            }
+
+                            Button {
+
+                            } label: {
+                                Label("Объединить", systemImage: "document.on.document")
+                            }
+                        }
                     }
                 }
             }

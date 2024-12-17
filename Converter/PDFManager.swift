@@ -13,12 +13,12 @@ final class PDFManager {
 
     let format = UIGraphicsPDFRendererFormat()
     let pageRect = CGRect(x: 0, y: 0, width: 595, height: 842)
-    let metaData = [
-        kCGPDFContextTitle: "Hello, World!",
-        kCGPDFContextAuthor: "John Doe"
-    ]
 
     func createPDF(with images: [UIImage], title: String, completion: @escaping (PDFFile) -> Void) {
+        let metaData = [
+            kCGPDFContextTitle: title,
+            kCGPDFContextAuthor: "ConverterApp"
+        ]
         format.documentInfo = metaData as [String: Any]
         let renderer = UIGraphicsPDFRenderer(bounds: pageRect, format: format)
 
@@ -33,9 +33,10 @@ final class PDFManager {
 
             do {
                 try data.write(to: pdfURL)
-                print("PDF saved: \(pdfURL.path)")
+                print("PDF saved: \(pdfURL)")
 
                 let file = PDFFile(
+                    id: UUID(),
                     title: title,
                     creationDate: Date(),
                     fileFormat: ".pdf",

@@ -9,4 +9,8 @@ import Foundation
 
 final class ListViewModel: ObservableObject {
     let coreDataManager = CoreDataManager.shared
+
+    func deleteDoc(document: PDFFile) {
+        coreDataManager.deleteDoc(document)
+    }
 }

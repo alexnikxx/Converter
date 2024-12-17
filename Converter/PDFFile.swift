@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct PDFFile: Identifiable {
-    let id = UUID()
+    let id: UUID
     let title: String
     let creationDate: Date
     let fileFormat: String

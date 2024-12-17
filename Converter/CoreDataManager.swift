@@ -46,6 +46,7 @@ class CoreDataManager: ObservableObject {
         do {
             let documents = try context.fetch(fetchRequest)
             savedDocs = documents.map { transformToPDF($0) }
+            savedDocs.sort(by: { $0.creationDate > $1.creationDate} )
         } catch let error {
             print("Error fetching documents: \(error.localizedDescription)")
         }
@@ -62,10 +63,47 @@ class CoreDataManager: ObservableObject {
         saveContext()
     }
 
+    func deleteDoc(_ doc: PDFFile) {
+        let fetchRequest = NSFetchRequest<PDFDocumentEntity>(entityName: "PDFDocumentEntity")
+
+        do {
+            let documents = try context.fetch(fetchRequest)
+            if let document = documents.first(where: { $0.id == doc.id}) {
+                if let filePath = document.fileURL, let fileURL = URL(string: filePath) {
+                    deleteFile(at: fileURL)
+                }
+
+                context.delete(document)
+                saveContext()
+            } else {
+                print("File not found")
+            }
+        } catch let error {
+            print("Error deleting: \(error.localizedDescription)")
+        }
+
+        saveContext()
+    }
+
+    private func deleteFile(at url: URL) {
+        let fileManager = FileManager.default
+        if fileManager.fileExists(atPath: url.path) {
+            do {
+                try fileManager.removeItem(at: url)
+                print("File deleted: \(url.path)")
+            } catch let error {
+                print("Error deleting file: \(error.localizedDescription)")
+            }
+        } else {
+            print("File doesn't exist")
+        }
+    }
+
     private func transformToPDF(_ entity: PDFDocumentEntity) -> PDFFile {
         guard let filePath = entity.fileURL, let url = URL(string: filePath) else {
             print("Error getting file URL")
             return PDFFile(
+                id: entity.id ?? UUID(),
                 title: entity.title ?? "Unknown",
                 creationDate: entity.creationDate ?? Date(),
                 fileFormat: entity.fileFormat ?? ".pdf",
@@ -74,6 +112,7 @@ class CoreDataManager: ObservableObject {
         }
 
         return PDFFile(
+            id: entity.id ?? UUID(),
             title: entity.title ?? "Unknown",
             creationDate: entity.creationDate ?? Date(),
             fileFormat: entity.fileFormat ?? ".pdf",
