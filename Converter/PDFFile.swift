@@ -7,11 +7,10 @@
 
 import SwiftUI
 
-struct PDFDocument: Identifiable {
+struct PDFFile: Identifiable {
     let id = UUID()
     let title: String
     let creationDate: Date
-    let thumnail: Image
     let fileFormat: String
 
     func convertDateToString() -> String {

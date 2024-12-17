@@ -14,28 +14,6 @@ struct ListView: View {
         GridItem(.flexible()),
         GridItem(.flexible())
     ]
-    
-    let documents: [PDFDocument] = [
-        PDFDocument(title: "Паспорт", creationDate: Date(), thumnail: Image(systemName: "document.fill"), fileFormat: ".pdf"),
-        PDFDocument(title: "Паспорт", creationDate: Date(), thumnail: Image(systemName: "document.fill"), fileFormat: ".pdf"),
-        PDFDocument(title: "Паспорт", creationDate: Date(), thumnail: Image(systemName: "document.fill"), fileFormat: ".pdf"),
-        PDFDocument(title: "Паспорт", creationDate: Date(), thumnail: Image(systemName: "document.fill"), fileFormat: ".pdf"),
-        PDFDocument(title: "Паспорт", creationDate: Date(), thumnail: Image(systemName: "document.fill"), fileFormat: ".pdf"),
-        PDFDocument(title: "Паспорт", creationDate: Date(), thumnail: Image(systemName: "document.fill"), fileFormat: ".pdf"),
-        PDFDocument(title: "Паспорт", creationDate: Date(), thumnail: Image(systemName: "document.fill"), fileFormat: ".pdf"),
-        PDFDocument(title: "Паспорт", creationDate: Date(), thumnail: Image(systemName: "document.fill"), fileFormat: ".pdf"),
-        PDFDocument(title: "Паспорт", creationDate: Date(), thumnail: Image(systemName: "document.fill"), fileFormat: ".pdf"),
-        PDFDocument(title: "Паспорт", creationDate: Date(), thumnail: Image(systemName: "document.fill"), fileFormat: ".pdf"),
-        PDFDocument(title: "Паспорт", creationDate: Date(), thumnail: Image(systemName: "document.fill"), fileFormat: ".pdf"),
-        PDFDocument(title: "Паспорт", creationDate: Date(), thumnail: Image(systemName: "document.fill"), fileFormat: ".pdf"),
-        PDFDocument(title: "Паспорт", creationDate: Date(), thumnail: Image(systemName: "document.fill"), fileFormat: ".pdf"),
-        PDFDocument(title: "Паспорт", creationDate: Date(), thumnail: Image(systemName: "document.fill"), fileFormat: ".pdf"),
-        PDFDocument(title: "Паспорт", creationDate: Date(), thumnail: Image(systemName: "document.fill"), fileFormat: ".pdf"),
-        PDFDocument(title: "Паспорт", creationDate: Date(), thumnail: Image(systemName: "document.fill"), fileFormat: ".pdf"),
-        PDFDocument(title: "Паспорт", creationDate: Date(), thumnail: Image(systemName: "document.fill"), fileFormat: ".pdf"),
-        PDFDocument(title: "Паспорт", creationDate: Date(), thumnail: Image(systemName: "document.fill"), fileFormat: ".pdf"),
-        PDFDocument(title: "Паспорт", creationDate: Date(), thumnail: Image(systemName: "document.fill"), fileFormat: ".pdf")
-    ]
 
     var body: some View {
         NavigationView {
@@ -48,7 +26,7 @@ struct ListView: View {
                     }
                     .buttonStyle(PlainButtonStyle())
 
-                    ForEach(documents, id: \.id) { document in
+                    ForEach(viewModel.coreDataManager.savedDocs, id: \.id) { document in
                         NavigationLink {
 
                         } label: {

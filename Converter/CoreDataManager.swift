@@ -13,7 +13,7 @@ class CoreDataManager: ObservableObject {
 
     private let persistedContainer: NSPersistentContainer
     let context: NSManagedObjectContext
-    @Published var savedDocs: [PDFDocument] = []
+    @Published var savedDocs: [PDFFile] = []
 
     private init() {
         persistedContainer = NSPersistentContainer(name: "Converter")
@@ -31,7 +31,6 @@ class CoreDataManager: ObservableObject {
     }
 
     private func saveContext() {
-        let context = persistedContainer.viewContext
         if context.hasChanges {
             do {
                 try context.save()
@@ -45,41 +44,28 @@ class CoreDataManager: ObservableObject {
     func fetchDocs() {
         let fetchRequest = NSFetchRequest<PDFDocumentEntity>(entityName: "PDFDocumentEntity")
         do {
-            let documents = try persistedContainer.viewContext.fetch(fetchRequest)
+            let documents = try context.fetch(fetchRequest)
             savedDocs = documents.map { transformToPDF($0) }
         } catch let error {
             print("Error fetching documents: \(error.localizedDescription)")
         }
     }
 
-    func addDoc() {
-        let newDoc = PDFDocumentEntity(context: persistedContainer.viewContext)
-        newDoc.title = "Document\(Date())"
-        newDoc.fileFormat = ".pdf"
-        newDoc.creationDate = Date()
-        //        newDoc.fileURL = URL(fileURLWithPath: "")
-        //        newDoc.thumbnail =
+    func addDoc(from pdf: PDFFile) {
+        let newDoc = PDFDocumentEntity(context: context)
+        newDoc.id = pdf.id
+        newDoc.title = pdf.title
+        newDoc.fileFormat = pdf.fileFormat
+        newDoc.creationDate = pdf.creationDate
+//        newDoc.fileURL = pdf.fileURL.absoluteString
 
         saveContext()
     }
 
-    private func getDocumentsDirectory() -> URL {
-        let paths = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)
-        return paths[0]
-    }
-
-    private func transformToPDF(_ entity: PDFDocumentEntity) -> PDFDocument {
-        let thumbnailImage: Image
-        if let imageData = entity.thumbnail, let uiImage = UIImage(data: imageData) {
-            thumbnailImage = Image(uiImage: uiImage)
-        } else {
-            thumbnailImage = Image(systemName: "doc.plaintext") // Default placeholder
-        }
-
-        return PDFDocument(
+    private func transformToPDF(_ entity: PDFDocumentEntity) -> PDFFile {
+        return PDFFile(
             title: entity.title ?? "Unknown",
             creationDate: entity.creationDate ?? Date(),
-            thumnail: thumbnailImage,
             fileFormat: entity.fileFormat ?? ".pdf"
         )
     }

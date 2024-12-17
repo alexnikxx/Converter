@@ -10,31 +10,44 @@ import PhotosUI
 
 struct NewDocumentView: View {
     @StateObject private var viewModel = NewDocumentViewModel()
+    @State var showingAlert = false
 
     var body: some View {
         VStack {
-            ScrollView(.vertical) {
-                ForEach(viewModel.images, id: \.self) { image in
-                    Image(uiImage: image)
-                        .resizable()
-                        .scaledToFit()
+            if viewModel.images.isEmpty {
+                Text("Выберите изображения из галереи, нажав на плюс в правом верхнем углу")
+                    .multilineTextAlignment(.center)
+            } else {
+                ScrollView(.vertical) {
+                    ForEach(viewModel.images, id: \.self) { image in
+                        Image(uiImage: image)
+                            .resizable()
+                            .scaledToFit()
+                    }
                 }
             }
-
-            Button {
-                viewModel.showingImagePicker = true
-            } label: {
-                Text("Выбрать изображения")
-            }
-            .buttonStyle(.borderedProminent)
         }
+        .padding()
         .onChange(of: viewModel.inputImages) { _ in viewModel.loadImages() }
         .sheet(isPresented: $viewModel.showingImagePicker) {
             ImagePicker(images: $viewModel.inputImages)
         }
-        .toolbar {
+        .alert("Important message", isPresented: $showingAlert) {
+            TextField("Введите название", text: $viewModel.title)
+            Button("Отменить", role: .cancel) { }
             Button("Сохранить") {
-                
+                viewModel.saveDocument(images: viewModel.images, title: viewModel.title)
+            }
+        }
+        .toolbar {
+            Button {
+                viewModel.showingImagePicker = true
+            } label: {
+                Image(systemName: "plus")
+            }
+
+            Button("Сохранить") {
+                showingAlert = true
             }
         }
     }

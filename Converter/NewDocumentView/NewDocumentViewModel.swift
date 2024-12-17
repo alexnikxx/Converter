@@ -8,11 +8,20 @@
 import SwiftUI
 
 final class NewDocumentViewModel: ObservableObject {
-    @State var images: [UIImage] = []
-    @State var showingImagePicker = false
-    @State var inputImages: [UIImage] = []
+    let coreDataManager = CoreDataManager.shared
+    let pdfManager = PDFManager()
+    @Published var images: [UIImage] = []
+    @Published var showingImagePicker = false
+    @Published var inputImages: [UIImage] = []
+    @Published var title: String = ""
 
     func loadImages() {
         images = inputImages
+    }
+
+    func saveDocument(images: [UIImage], title: String) {
+        pdfManager.createPDF(with: images, title: title) { pdf in
+            self.coreDataManager.addDoc(from: pdf)
+        }
     }
 }

@@ -8,11 +8,11 @@
 import SwiftUI
 
 struct PDFDocumentCell: View {
-    let document: PDFDocument
+    let document: PDFFile
 
     var body: some View {
         VStack {
-            document.thumnail
+            Image(systemName: "document.fill")
                 .resizable()
                 .scaledToFit()
                 .frame(width: 100, height: 100)
@@ -33,5 +33,5 @@ struct PDFDocumentCell: View {
 }
 
 #Preview {
-    PDFDocumentCell(document: PDFDocument(title: "Паспорт", creationDate: Date(), thumnail: Image(systemName: "document.fill"), fileFormat: ".pdf"))
+    PDFDocumentCell(document: PDFFile(title: "Паспорт", creationDate: Date(), fileFormat: ".pdf"))
 }
