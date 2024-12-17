@@ -8,7 +8,7 @@
 import SwiftUI
 import PhotosUI
 
-struct ContentView: View {
+struct NewDocumentView: View {
     @State private var image: Image?
     @State private var showingImagePicker = false
     @State private var inputImage: UIImage?
@@ -40,5 +40,5 @@ struct ContentView: View {
 }
 
 #Preview {
-    ContentView()
+    NewDocumentView()
 }
