@@ -12,6 +12,7 @@ struct NewDocumentView: View {
     @StateObject private var viewModel = NewDocumentViewModel()
     @State private var showingAlert = false
     @State private var showingTitleTextField = false
+    @Environment(\.presentationMode) var presentationMode
 
     var body: some View {
         VStack {
@@ -41,6 +42,7 @@ struct NewDocumentView: View {
             Button("Отменить", role: .cancel) { }
             Button("Сохранить") {
                 viewModel.saveDocument(images: viewModel.images, title: viewModel.title)
+                presentationMode.wrappedValue.dismiss()
             }
         }
         .toolbar {
